@@ -1,10 +1,10 @@
-// ============= SyncTube Connect — Room Page =============
-const API = window.SYNCTUBE_CONFIG.BACKEND_URL;
+// ============= Syncora Connect — Room Page =============
+const API = window.SYNCORA_CONFIG.BACKEND_URL;
 
 // Parse query params
 const params = new URLSearchParams(window.location.search);
 const ROOM_CODE = (params.get("code") || "").toUpperCase();
-const USER_NAME = sessionStorage.getItem("synctube_name") || "Guest";
+const USER_NAME = sessionStorage.getItem("syncora_name") || "Guest";
 
 if (!ROOM_CODE) { window.location.href = "index.html"; }
 
@@ -98,7 +98,7 @@ socket.on("chat_message", ({ userName, message, timestamp }) => {
 function applyRoomState(room) {
   document.getElementById("roomCodeDisplay").textContent = room.code;
   document.getElementById("userCountNum").textContent = room.userCount;
-  document.title = `SyncTube — ${room.code}`;
+  document.title = `Syncora — ${room.code}`;
 
   if (isHost) {
     document.getElementById("hostBadge").classList.remove("hidden");

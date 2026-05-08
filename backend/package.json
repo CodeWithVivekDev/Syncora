@@ -1,7 +1,7 @@
 {
-  "name": "synctube-backend",
+  "name": "syncora-backend",
   "version": "1.0.0",
-  "description": "SyncTube Connect - Real-time YouTube watch party backend",
+  "description": "Syncora Connect - Real-time YouTube watch party backend",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",

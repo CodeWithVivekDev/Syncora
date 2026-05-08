@@ -1,4 +1,4 @@
-# 🎬 SyncTube Connect
+# 🎬 Syncora Connect
 
 Real-time YouTube watch party app. Create a room, share the code, and watch videos in perfect sync with friends.
 
@@ -16,7 +16,7 @@ Real-time YouTube watch party app. Create a room, share the code, and watch vide
 ## Project Structure
 
 ```
-synctube-connect/
+syncora-connect/
 ├── frontend/          # Static files → deploy to GitHub Pages
 │   ├── index.html     # Landing page (create/join room)
 │   ├── room.html      # Watch room

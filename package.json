@@ -1,7 +1,7 @@
 {
-  "name": "synctube-connect",
+  "name": "syncora-connect",
   "version": "1.0.0",
-  "description": "SyncTube Connect — Real-time YouTube watch party",
+  "description": "Syncora Connect — Real-time YouTube watch party",
   "scripts": {
     "install:backend": "cd backend && npm install",
     "start:backend": "cd backend && npm start",

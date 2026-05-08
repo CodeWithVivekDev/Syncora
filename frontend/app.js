@@ -1,5 +1,5 @@
-// ============= SyncTube Connect — Landing Page =============
-const API = window.SYNCTUBE_CONFIG.BACKEND_URL;
+// ============= Syncora Connect — Landing Page =============
+const API = window.SYNCORA_CONFIG.BACKEND_URL;
 
 function showError(msg) {
   const el = document.getElementById("errorMsg");
@@ -42,8 +42,8 @@ document.getElementById("createBtn").addEventListener("click", async () => {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Failed to create room");
 
-    sessionStorage.setItem("synctube_name", hostName);
-    sessionStorage.setItem("synctube_host", "true");
+    sessionStorage.setItem("syncora_name", hostName);
+    sessionStorage.setItem("syncora_host", "true");
     window.location.href = `room.html?code=${data.code}`;
   } catch (e) {
     showError(e.message);
@@ -68,8 +68,8 @@ document.getElementById("joinBtn").addEventListener("click", async () => {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Room not found");
 
-    sessionStorage.setItem("synctube_name", name);
-    sessionStorage.setItem("synctube_host", "false");
+    sessionStorage.setItem("syncora_name", name);
+    sessionStorage.setItem("syncora_host", "false");
     window.location.href = `room.html?code=${code}`;
   } catch (e) {
     showError(e.message);

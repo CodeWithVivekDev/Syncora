@@ -180,4 +180,4 @@ io.on("connection", (socket) => {
 });
 
 const PORT = process.env.PORT || 4000;
-server.listen(PORT, () => console.log(`SyncTube backend running on port ${PORT}`));
+server.listen(PORT, () => console.log(`Syncora backend running on port ${PORT}`));
