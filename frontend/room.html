@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SyncTube Room</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body class="room-page">
+  <div class="noise"></div>
+
+  <!-- Room Header -->
+  <header class="room-header">
+    <a href="index.html" class="logo logo-sm">
+      <span class="logo-icon">▶</span>
+      <span class="logo-text">SyncTube<em>Connect</em></span>
+    </a>
+    <div class="room-meta">
+      <div class="room-code-display">
+        <span class="rcd-label">ROOM</span>
+        <span class="rcd-code" id="roomCodeDisplay">——</span>
+        <button class="copy-btn" id="copyCodeBtn" title="Copy room code">⧉</button>
+      </div>
+      <div class="user-count" id="userCount">
+        <span class="uc-dot"></span>
+        <span id="userCountNum">1</span> watching
+      </div>
+    </div>
+    <div class="host-badge hidden" id="hostBadge">👑 Host</div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="room-layout">
+    <!-- Video Column -->
+    <div class="video-column">
+      <!-- Video Input (host only) -->
+      <div class="video-controls hidden" id="videoControls">
+        <input class="input input-url" id="videoUrlInput" type="text" placeholder="Paste YouTube URL to load video…" />
+        <button class="btn btn-sm btn-primary" id="loadVideoBtn">Load</button>
+      </div>
+
+      <!-- Player -->
+      <div class="player-wrap" id="playerWrap">
+        <div class="player-placeholder" id="playerPlaceholder">
+          <div class="pp-icon">▶</div>
+          <p id="ppText">Waiting for host to load a video…</p>
+        </div>
+        <div id="ytPlayer"></div>
+      </div>
+
+      <!-- Sync status bar -->
+      <div class="sync-bar">
+        <div class="sync-status" id="syncStatus">
+          <span class="ss-dot"></span>
+          <span id="syncStatusText">Connecting…</span>
+        </div>
+        <div class="viewer-list" id="viewerList"></div>
+      </div>
+    </div>
+
+    <!-- Chat Column -->
+    <div class="chat-column">
+      <div class="chat-header">Live Chat</div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-row">
+        <input class="input chat-input" id="chatInput" type="text" placeholder="Say something…" maxlength="300" autocomplete="off" />
+        <button class="btn btn-sm btn-send" id="sendBtn">↑</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="config.js"></script>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="room.js"></script>
+</body>
+</html>

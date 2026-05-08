@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SyncTube Connect</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="noise"></div>
+
+  <header class="header">
+    <div class="logo">
+      <span class="logo-icon">▶</span>
+      <span class="logo-text">SyncTube<em>Connect</em></span>
+    </div>
+  </header>
+
+  <main class="hero">
+    <div class="hero-bg">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="badge">Watch together, anywhere</div>
+      <h1 class="headline">
+        YouTube.<br />
+        <span class="accent">Synchronized.</span>
+      </h1>
+      <p class="subline">Create a room, share the code, and watch videos in perfect sync — no lag, no friction.</p>
+
+      <div class="card-group">
+        <!-- Create Room -->
+        <div class="action-card" id="createCard">
+          <div class="card-label">Start a room</div>
+          <input class="input" id="hostName" type="text" placeholder="Your name" maxlength="24" autocomplete="off" />
+          <input class="input" id="createVideoUrl" type="text" placeholder="YouTube URL (optional)" autocomplete="off" />
+          <button class="btn btn-primary" id="createBtn">
+            <span>Create Room</span>
+            <span class="btn-arrow">→</span>
+          </button>
+        </div>
+
+        <div class="divider-or"><span>or</span></div>
+
+        <!-- Join Room -->
+        <div class="action-card" id="joinCard">
+          <div class="card-label">Join a room</div>
+          <input class="input" id="joinName" type="text" placeholder="Your name" maxlength="24" autocomplete="off" />
+          <input class="input input-code" id="joinCode" type="text" placeholder="ROOM CODE" maxlength="6" autocomplete="off" />
+          <button class="btn btn-secondary" id="joinBtn">
+            <span>Join Room</span>
+            <span class="btn-arrow">→</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="errorMsg" class="error-msg hidden"></div>
+    </div>
+
+    <div class="feature-strip">
+      <div class="feature-item"><span class="fi-icon">⚡</span> Real-time sync</div>
+      <div class="feature-item"><span class="fi-icon">🔒</span> Private rooms</div>
+      <div class="feature-item"><span class="fi-icon">💬</span> Live chat</div>
+      <div class="feature-item"><span class="fi-icon">👑</span> Host controls</div>
+    </div>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
