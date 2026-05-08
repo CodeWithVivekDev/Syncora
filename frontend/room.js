@@ -38,6 +38,11 @@ socket.on("connect", () => {
     applyRoomState(res.room);
     initYouTubePlayer(); // Init player if API is ready
     if (!isHost) socket.emit("request_sync");
+    
+    // Once joined, check if Peer is ready to emit ID
+    if (peer && peer.id) {
+      socket.emit("voice_ready", { peerId: peer.id });
+    }
   });
 });
 
@@ -68,11 +73,17 @@ socket.on("sync_event", ({ type, currentTime, playing }) => {
 socket.on("user_joined", ({ user, userCount }) => {
   addSystemMsg(`${user.name} joined.`);
   document.getElementById("userCountNum").textContent = userCount;
+  if (currentRoomState && currentRoomState.users) {
+    currentRoomState.users.push(user);
+  }
 });
 
-socket.on("user_left", ({ userName, userCount }) => {
+socket.on("user_left", ({ userName, userCount, userId }) => {
   addSystemMsg(`${userName} left.`);
   document.getElementById("userCountNum").textContent = userCount;
+  if (currentRoomState && currentRoomState.users) {
+    currentRoomState.users = currentRoomState.users.filter(u => u.id !== userId);
+  }
 });
 
 socket.on("host_changed", ({ newHostName }) => {
@@ -231,4 +242,109 @@ function extractVideoId(url) {
   if (!url) return null;
   const m = url.match(/(?:v=|\/embed\/|youtu\.be\/|\/v\/|\/shorts\/)([A-Za-z0-9_-]{11})/);
   return m ? m[1] : null;
+}
+
+// ==========================================
+// WebRTC Voice Calling (PeerJS)
+// ==========================================
+let peer = null;
+let localStream = null;
+let isMuted = true;
+const connectedPeers = new Map();
+
+// Initialize PeerJS
+peer = new Peer();
+peer.on("open", (id) => {
+  if (socket && socket.connected && currentRoomState) {
+    socket.emit("voice_ready", { peerId: id });
+  }
+});
+
+peer.on("call", (call) => {
+  call.answer(localStream || undefined); // Answer with or without stream
+  call.on("stream", (remoteStream) => {
+    addAudioElement(call.peer, remoteStream);
+  });
+  call.on("close", () => removeAudioElement(call.peer));
+  connectedPeers.set(call.peer, call);
+});
+
+socket.on("user_voice_ready", ({ userId, peerId }) => {
+  // Update user peerId in local state
+  if (currentRoomState && currentRoomState.users) {
+    const u = currentRoomState.users.find(x => x.id === userId);
+    if (u) u.peerId = peerId;
+  }
+  
+  // Call them if we are unmuted
+  if (!isMuted && localStream && peerId && peerId !== peer.id) {
+    const call = peer.call(peerId, localStream);
+    if (call) {
+      call.on("stream", (remoteStream) => addAudioElement(peerId, remoteStream));
+      call.on("close", () => removeAudioElement(peerId));
+      connectedPeers.set(peerId, call);
+    }
+  }
+});
+
+function callAllPeers() {
+  if (!currentRoomState || !localStream) return;
+  const users = currentRoomState.users || [];
+  for (const u of users) {
+    if (u.peerId && u.peerId !== peer.id) {
+      const call = peer.call(u.peerId, localStream);
+      if (call) {
+        call.on("stream", (remoteStream) => addAudioElement(u.peerId, remoteStream));
+        call.on("close", () => removeAudioElement(u.peerId));
+        connectedPeers.set(u.peerId, call);
+      }
+    }
+  }
+}
+
+document.getElementById("voiceToggleBtn").addEventListener("click", async () => {
+  const btn = document.getElementById("voiceToggleBtn");
+  if (isMuted) {
+    try {
+      localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      isMuted = false;
+      btn.textContent = "🎙️ Mute";
+      btn.classList.add("active");
+      
+      callAllPeers();
+    } catch (err) {
+      showToast("Microphone access denied.");
+    }
+  } else {
+    // Mute
+    if (localStream) {
+      localStream.getTracks().forEach(track => track.stop());
+      localStream = null;
+    }
+    isMuted = true;
+    btn.textContent = "🎤 Unmute";
+    btn.classList.remove("active");
+    
+    // Close existing calls so we don't send empty audio
+    for (const call of connectedPeers.values()) {
+      call.close();
+    }
+    connectedPeers.clear();
+  }
+});
+
+function addAudioElement(peerId, stream) {
+  let el = document.getElementById(`audio-${peerId}`);
+  if (!el) {
+    el = document.createElement("audio");
+    el.id = `audio-${peerId}`;
+    el.autoplay = true;
+    document.getElementById("audioContainer").appendChild(el);
+  }
+  el.srcObject = stream;
+}
+
+function removeAudioElement(peerId) {
+  const el = document.getElementById(`audio-${peerId}`);
+  if (el) el.remove();
 }

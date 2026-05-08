@@ -37,7 +37,7 @@ function getRoomPublicData(room) {
     videoId: room.videoId,
     state: room.state,
     userCount: room.users.size,
-    users: Array.from(room.users.values()).map((u) => ({ id: u.id, name: u.name, isHost: u.isHost })),
+    users: Array.from(room.users.values()).map((u) => ({ id: u.id, name: u.name, isHost: u.isHost, peerId: u.peerId })),
   };
 }
 
@@ -105,9 +105,16 @@ io.on("connection", (socket) => {
 
     // Notify others
     socket.to(code).emit("user_joined", {
-      user: { id: user.id, name: user.name, isHost: user.isHost },
+      user: { id: user.id, name: user.name, isHost: user.isHost, peerId: user.peerId },
       userCount: room.users.size,
     });
+  });
+
+  // Voice ready
+  socket.on("voice_ready", ({ peerId }) => {
+    if (!currentRoom || !currentUser) return;
+    currentUser.peerId = peerId;
+    socket.to(currentRoom.code).emit("user_voice_ready", { userId: currentUser.id, peerId });
   });
 
   // Host sets video
